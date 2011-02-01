@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Term-ExtendedColor-Xresources
-version:            0.032
+version:            0.034
 abstract:           Query and set various Xresources
 author:
     - Magnus Woldrich <trapd00r@trapd00r.se>

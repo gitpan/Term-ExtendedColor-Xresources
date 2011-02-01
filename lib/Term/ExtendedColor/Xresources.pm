@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package Term::ExtendedColor::Xresources;
 
-our $VERSION  = '0.032';
+our $VERSION  = '0.034';
 
 require Exporter;
 @ISA = 'Exporter';
@@ -24,7 +24,6 @@ sub get_xterm_colors {
   my $arg = shift;
 
   my $index = $arg->{index} || [0 .. 255];
-  #exists($arg->{type}) or $arg->{type} = 'dec';
 
 
   my @indexes;
@@ -34,9 +33,6 @@ sub get_xterm_colors {
   }
   elsif(ref($index) eq '') {
     push(@indexes, $index);
-  }
-  else {
-    croak("Reference type " . ref($index) . " not supported\n");
   }
 
   if( grep { $_ < 0 } @indexes ) {
