@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:               Term-ExtendedColor-Xresources
-version:            0.034
-abstract:           Query and set various Xresources
+version:            0.041
+abstract:           Query and set various X resources
 author:
     - Magnus Woldrich <trapd00r@trapd00r.se>
 license:            perl
@@ -13,6 +13,9 @@ build_requires:
 requires:
     Term::ReadKey:  0
     Test::More:     0
+resources:
+    bugtracker:  https://github.com/trapd00r/Term-ExtendedColor-Xresources/issues
+    repository:  https://github.com/trapd00r/Term-ExtendedColor-Xresources
 no_index:
     directory:
         - t
