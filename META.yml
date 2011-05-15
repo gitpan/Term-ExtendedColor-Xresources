@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Term-ExtendedColor-Xresources
-version:            0.056
+version:            0.060
 abstract:           Get, set and modify X resources
 author:
     - Magnus Woldrich <trapd00r@trapd00r.se>
