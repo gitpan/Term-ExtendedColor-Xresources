@@ -6,7 +6,7 @@ BEGIN {
   use Exporter;
   use vars qw($VERSION @ISA @EXPORT_OK);
 
-  $VERSION = '0.070';
+  $VERSION = '0.072';
   @ISA     = qw(Exporter);
   @EXPORT_OK = qw(
     set_xterm_color
@@ -52,16 +52,18 @@ sub get_xterm_colors {
     print "\e]4;$i;?\a"; # the '?' indicates a query
 
     my $response = '';
-    $response .= ReadKey(0, $tty) for(0 .. 22);
-
+    my ($r, $g, $b);
+    while(1) {
+      if ($response =~ m[ rgb: (.{4}) / (.{4}) / (.{4}) ]x) {
+        ($r, $g, $b) = map { substr $_, 0, 2 } ($1, $2, $3);
+        last;
+      }
+      else {
+        $response .= ReadKey(0, $tty);
+      }
+    }
 
     ReadMode('normal');
-
-    my($r, $g, $b) = $response =~ m{
-      rgb: ([A-Za-z0-9]{2}).*/
-           ([A-Za-z0-9]{2}).*/
-           ([A-Za-z0-9]{2})
-       }x;
 
     $colors->{$i}->{raw} = $response;
     # Return in base 10 by default
@@ -79,6 +81,10 @@ sub get_xterm_colors {
       $colors->{$i}->{blue}  = $b;
       $colors->{$i}->{rgb}   = "$r/$g/$b"; # 255/255/0
     }
+
+    $colors->{$i}{r} = $colors->{$i}{red};
+    $colors->{$i}{g} = $colors->{$i}{green};
+    $colors->{$i}{b} = $colors->{$i}{blue};
   }
   return $colors;
 }
@@ -223,7 +229,7 @@ indexes as keys and the appropriate escape sequences as values.
 
 =head2 get_xterm_color()
 
-  my $defined_colors = get_xterm_color({ index => [0 .. 255] });
+  my $defined_colors = get_xterm_color({ index => [0 .. 255], type => 'dec' });
 
   print $defined_colors->{4}->{red}, "\n";
   print $defined_colors->{8}->{rgb}, "\n";
@@ -247,6 +253,25 @@ The full color string can be retrieved like so:
 
 The C<raw> element is the full, raw response from the terminal, including escape
 sequences.
+
+The following arguments are supported:
+
+=over
+
+=item index => $index | \@indexes
+
+Arrayref of color indexes to look up and return. Defaults to [0..255], i.e.
+all indexes. Alternately a single index may be passed.
+
+=item type => 'dec' | 'hex'
+
+May be 'dec' or 'hex'. The default is 'dec' (decimal) which returns color
+values as integers between 0 and 255, and returns a 'rgb' string of the form
+'$r/$g/$b' e.g. '255/0/0'. If 'hex' is passed, returns color values in
+base 16, zero-padded to two characters (between 00 and ff) and a 'rgb' string
+of the form '$r$g$b' e.g. 'ff0000'
+
+=back
 
 =head2 get_xterm_colors()
 
